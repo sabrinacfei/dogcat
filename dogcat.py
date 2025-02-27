@@ -12,6 +12,10 @@ model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 def generate_response(pet, text, user_id):
     if "chat_history" not in session:
         session["chat_history"] = {}
+        print("Initialized chat_history in session.")  # 添加日志，確保這裡有執行
+def generate_response(pet, text, user_id):
+    if "chat_history" not in session:
+        session["chat_history"] = {}
 
     if user_id not in session["chat_history"]:
         session["chat_history"][user_id] = []  

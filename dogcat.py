@@ -9,7 +9,7 @@ GENAI_API_KEY = os.getenv("GENAI_API_KEY")
 if not GENAI_API_KEY:
     raise ValueError("Missing API Key for Google Generative AI")
 
-genai.configure(api_key=AIzaSyCZhmN1ayK0Fqb9jesJd2W4uVNxP2IQY4o)
+genai.configure(api_key=GENAI_API_KEY)
 model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
 @app.route("/", methods=["GET", "HEAD"])

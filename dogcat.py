@@ -3,14 +3,13 @@ import google.generativeai as genai
 import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24).hex()  # 使用隨機密鑰，避免外洩
+app.secret_key = os.urandom(24).hex()  
 
-# 使用環境變數獲取 API 金鑰
 GENAI_API_KEY = os.getenv("GENAI_API_KEY")
 if not GENAI_API_KEY:
     raise ValueError("Missing API Key for Google Generative AI")
 
-genai.configure(api_key=GENAI_API_KEY)
+genai.configure(api_key=AIzaSyCZhmN1ayK0Fqb9jesJd2W4uVNxP2IQY4o)
 model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
 @app.route("/", methods=["GET", "HEAD"])

@@ -11,7 +11,9 @@ model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
 @app.route("/", methods=["GET", "HEAD"])
 def home():
-    return "", 200  # HEAD 請求不返回內容
+    if request.method == "HEAD":
+        return "", 200
+    return render_template("index.html")  
 
 if __name__ == "__main__":
     app.run()
@@ -37,10 +39,6 @@ def generate_response(pet, text, user_id):
     session["chat_history"][user_id].append(f"AI：{response}")
 
     return response
-
-@app.route("/")
-def home():
-    return render_template("index.html")  # 确保 templates 目录有 index.html
 
 if __name__ == "__main__":
     app.run(debug=True)

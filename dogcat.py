@@ -3,9 +3,13 @@ import google.generativeai as genai
 import os
 
 app = Flask(__name__)
-app.secret_key = "AIzaSyCZhmN1ayK0Fqb9jesJd2W4uVNxP2IQY4o" 
+app.secret_key = os.urandom(24).hex()  # 使用隨機密鑰，避免外洩
 
-GENAI_API_KEY = "AIzaSyCZhmN1ayK0Fqb9jesJd2W4uVNxP2IQY4o"
+# 使用環境變數獲取 API 金鑰
+GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+if not GENAI_API_KEY:
+    raise ValueError("Missing API Key for Google Generative AI")
+
 genai.configure(api_key=GENAI_API_KEY)
 model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
@@ -13,21 +17,14 @@ model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 def home():
     if request.method == "HEAD":
         return "", 200
-    return render_template("index.html")  
+    return render_template("index.html")
 
-if __name__ == "__main__":
-    app.run()
-
-def generate_response(pet, text, user_id):
-    if "chat_history" not in session:
-        session["chat_history"] = {}
-        print("Initialized chat_history in session.")  # 添加日志，確保這裡有執行
 def generate_response(pet, text, user_id):
     if "chat_history" not in session:
         session["chat_history"] = {}
 
     if user_id not in session["chat_history"]:
-        session["chat_history"][user_id] = []  
+        session["chat_history"][user_id] = []
 
     session["chat_history"][user_id].append(f"主人：{text}")
 
@@ -40,20 +37,17 @@ def generate_response(pet, text, user_id):
 
     return response
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
 @app.route('/generate_response', methods=['POST'])
 def generate():
     data = request.get_json()
     text = data['text']
     pet = data['pet']
-    user_id = request.remote_addr 
+    user_id = request.remote_addr
 
     response = generate_response(pet, text, user_id)
 
     return jsonify({'response': response, 'pet': pet})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
-    app.run(host="0.0.0.0", port=port)
+    port = int(os.environ.get("PORT", 10000))  # 使用 Render 提供的 PORT
+    app.run(debug=True, host="0.0.0.0", port=port)

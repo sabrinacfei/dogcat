@@ -9,6 +9,13 @@ GENAI_API_KEY = "AIzaSyCZhmN1ayK0Fqb9jesJd2W4uVNxP2IQY4o"
 genai.configure(api_key=GENAI_API_KEY)
 model = genai.GenerativeModel(model_name="gemini-1.5-flash")
 
+@app.route("/", methods=["GET", "HEAD"])
+def home():
+    return "", 200  # HEAD 請求不返回內容
+
+if __name__ == "__main__":
+    app.run()
+
 def generate_response(pet, text, user_id):
     if "chat_history" not in session:
         session["chat_history"] = {}

@@ -38,9 +38,12 @@ def generate_response(pet, text, user_id):
 
     return response
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route("/")
+def home():
+    return render_template("index.html")  # 确保 templates 目录有 index.html
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 @app.route('/generate_response', methods=['POST'])
 def generate():
